@@ -4,6 +4,7 @@ require("../models/LifestyleProfile");
 // CREATE
 exports.createLifestyleProfile = async(req,res)=>{
  try{
+  req.body.userId = req.user.userId;
 
   const profile =
   await LifestyleProfile.create(req.body);
@@ -30,7 +31,7 @@ exports.getLifestyleProfiles = async(req,res)=>{
  try{
 
   const profiles =
-  await LifestyleProfile.find();
+  await LifestyleProfile.find({ userId: req.user.userId });
 
   res.status(200).json({
    success:true,
@@ -54,7 +55,7 @@ exports.getLifestyleProfileById = async(req,res)=>{
  try{
 
   const profile =
-  await LifestyleProfile.findById(req.params.id);
+  await LifestyleProfile.findOne({ _id: req.params.id, userId: req.user.userId });
 
   if(!profile){
    return res.status(404).json({
@@ -84,8 +85,8 @@ exports.updateLifestyleProfile = async(req,res)=>{
  try{
 
   const profile =
-  await LifestyleProfile.findByIdAndUpdate(
-   req.params.id,
+  await LifestyleProfile.findOneAndUpdate(
+   { _id: req.params.id, userId: req.user.userId },
    req.body,
    {
     new:true,
@@ -122,8 +123,8 @@ exports.deleteLifestyleProfile = async(req,res)=>{
  try{
 
   const profile =
-  await LifestyleProfile.findByIdAndDelete(
-   req.params.id
+  await LifestyleProfile.findOneAndDelete(
+   { _id: req.params.id, userId: req.user.userId }
   );
 
   if(!profile){

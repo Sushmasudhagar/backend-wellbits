@@ -3,7 +3,7 @@ const historyService = require('../services/historyservice');
 class HistoryController {
   async getUserHistory(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = req.user.userId;
       const { startDate, endDate, page, limit } = req.query;
 
       const historyTimeline = await historyService.getCleanMealHistory(userId, {

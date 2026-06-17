@@ -2,32 +2,65 @@ const mongoose = require("mongoose");
 
 const foodSchema = new mongoose.Schema(
 {
-    image:{
-        type:String
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
 
-    foodName:{
-        type:String
+    image: {
+        type: String,
+        default: ""
     },
 
-    calories:{
-        type:Number
+    foodName: {
+        type: String,
+        required: true
     },
 
-    protein:{
-        type:Number
+    calories: {
+        type: Number,
+        default: 0
     },
 
-    carbs:{
-        type:Number
+    protein: {
+        type: Number,
+        default: 0
     },
 
-    fat:{
-        type:Number
+    carbs: {
+        type: Number,
+        default: 0
     },
 
-    dietChart:{
-        type:String
+    fat: {
+        type: Number,
+        default: 0
+    },
+
+    sugar: {
+        type: Number,
+        default: 0
+    },
+
+    fiber: {
+        type: Number,
+        default: 0
+    },
+
+    mealType: {
+        type: String,
+        default: "Meal"
+    },
+
+    category: {
+        type: String,
+        default: "Home"
+    },
+
+    dietChart: {
+        type: String,
+        default: ""
     }
 },
 {

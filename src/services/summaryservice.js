@@ -1,5 +1,6 @@
 const summaryRepository = require('../repositories/summaryRepository');
 const healthScoreService = require('./healthScoreService');
+const FoodLog = require('../../models/foodModel');
 
 class SummaryService {
   _getTodayDateString() {
@@ -9,12 +10,18 @@ class SummaryService {
 
   async recalculateDailyTotals(userId) {
     const todayStr = this._getTodayDateString();
-    
-    const todayMealsDummyData = [
-      { name: "Avocado Toast & Eggs", calories: 450, protein: 22, carbs: 35, fats: 18, sugar: 4, fiber: 8 },
-      { name: "Protein Shake", calories: 300, protein: 30, carbs: 10, fats: 3, sugar: 2, fiber: 1 },
-      { name: "Glazed Donut", calories: 350, protein: 3, carbs: 45, fats: 15, sugar: 28, fiber: 1 }
-    ];
+    const todayStart = new Date(todayStr);
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(todayStart.getDate() + 1);
+
+    const foodLogs = await FoodLog.find({
+      userId,
+      createdAt: {
+        $gte: todayStart,
+        $lt: tomorrowStart
+      }
+    });
+
     let totalCalories = 0;
     let totalProtein = 0;
     let totalCarbs = 0;
@@ -22,13 +29,13 @@ class SummaryService {
     let totalSugar = 0;
     let totalFiber = 0;
 
-    todayMealsDummyData.forEach(meal => {
-      totalCalories += meal.calories;
-      totalProtein += meal.protein;
-      totalCarbs += meal.carbs;
-      totalFats += meal.fats;
-      totalSugar += meal.sugar;
-      totalFiber += meal.fiber;
+    foodLogs.forEach(meal => {
+      totalCalories += meal.calories || 0;
+      totalProtein += meal.protein || 0;
+      totalCarbs += meal.carbs || 0;
+      totalFats += meal.fat || 0;
+      totalSugar += meal.sugar || 0;
+      totalFiber += meal.fiber || 0;
     });
 
     const updatedTotals = {
@@ -45,7 +52,6 @@ class SummaryService {
   }
 
   async getTodaySummary(userId) {
-
     return await this.recalculateDailyTotals(userId);
   }
 }

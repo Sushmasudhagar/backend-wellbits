@@ -1,24 +1,26 @@
-const mongoose = require('mongoose');
+const FoodLog = require('../../models/foodModel');
 
 class HistoryRepository {
   
   async findLogsByDateRange(userId, startDate, endDate, page, limit) {
     const skipAmount = (page - 1) * limit;
-    const FoodLog = mongoose.model('FoodLog');
+    const start = startDate ? new Date(startDate) : new Date(0);
+    const end = endDate ? new Date(endDate) : new Date();
 
     const logs = await FoodLog.find({
       userId: userId,
       createdAt: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate) 
+        $gte: start,
+        $lte: end
       }
     })
-    .sort({ createdAt: -1 }) 
-    .skip(skipAmount)        
-    .limit(limit);           
+    .sort({ createdAt: -1 })
+    .skip(skipAmount)
+    .limit(limit);
+
     const totalLogs = await FoodLog.countDocuments({
       userId: userId,
-      createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+      createdAt: { $gte: start, $lte: end }
     });
 
     return { logs, totalLogs };

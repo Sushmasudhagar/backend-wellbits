@@ -2,6 +2,7 @@ const express=require("express");
 
 const router=express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
 const {
  createLifestyleProfile,
  getLifestyleProfiles,
@@ -12,14 +13,14 @@ const {
 =
 require("../controllers/lifestyleController");
 
-router.post("/create", createLifestyleProfile);
+router.post("/create", authMiddleware, createLifestyleProfile);
 
-router.get("/all", getLifestyleProfiles);
+router.get("/all", authMiddleware, getLifestyleProfiles);
 
-router.get("/:id", getLifestyleProfileById);
+router.get("/:id", authMiddleware, getLifestyleProfileById);
 
-router.put("/:id", updateLifestyleProfile);
+router.put("/:id", authMiddleware, updateLifestyleProfile);
 
-router.delete("/:id", deleteLifestyleProfile);
+router.delete("/:id", authMiddleware, deleteLifestyleProfile);
 
 module.exports=router;

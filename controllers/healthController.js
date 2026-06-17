@@ -4,6 +4,7 @@ require("../models/HealthProfile");
 // CREATE
 exports.createHealthProfile = async(req,res)=>{
  try{
+  req.body.userId = req.user.userId;
   const profile =
   await HealthProfile.create(req.body);
 
@@ -25,7 +26,7 @@ exports.createHealthProfile = async(req,res)=>{
 exports.getHealthProfiles = async(req,res)=>{
  try{
   const profiles =
-  await HealthProfile.find();
+  await HealthProfile.find({ userId: req.user.userId });
 
   res.status(200).json({
    success:true,
@@ -35,7 +36,8 @@ exports.getHealthProfiles = async(req,res)=>{
  }
  catch(error){
   res.status(500).json({
-   success:false
+   success:false,
+   message:error.message
   });
  }
 };
@@ -45,7 +47,7 @@ exports.getHealthProfileById = async(req,res)=>{
  try{
 
   const profile =
-  await HealthProfile.findById(req.params.id);
+  await HealthProfile.findOne({ _id: req.params.id, userId: req.user.userId });
 
   if(!profile){
    return res.status(404).json({
@@ -73,8 +75,8 @@ exports.updateHealthProfile = async(req,res)=>{
  try{
 
   const profile =
-  await HealthProfile.findByIdAndUpdate(
-   req.params.id,
+  await HealthProfile.findOneAndUpdate(
+   { _id: req.params.id, userId: req.user.userId },
    req.body,
    {
     new:true,
@@ -109,8 +111,8 @@ exports.deleteHealthProfile = async(req,res)=>{
  try{
 
   const profile =
-  await HealthProfile.findByIdAndDelete(
-   req.params.id
+  await HealthProfile.findOneAndDelete(
+   { _id: req.params.id, userId: req.user.userId }
   );
 
   if(!profile){
