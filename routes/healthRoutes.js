@@ -2,7 +2,6 @@ const express = require("express");
 
 const router = express.Router();
 
-const authMiddleware = require("../middleware/authMiddleware");
 const {
  createHealthProfile,
  getHealthProfiles,
@@ -14,18 +13,18 @@ const {
 require("../controllers/healthController");
 
 // Create
-router.post("/create", authMiddleware, createHealthProfile);
+router.post("/create", createHealthProfile);
 
 // Get All
-router.get("/all", authMiddleware, getHealthProfiles);
+router.get("/all", getHealthProfiles);
 
 // Get Single
-router.get("/:id", authMiddleware, getHealthProfileById);
+router.get("/:id", getHealthProfileById);
 
 // Update
-router.put("/:id", authMiddleware, updateHealthProfile);
+router.put("/:id", updateHealthProfile);
 
 // Delete
-router.delete("/:id", authMiddleware, deleteHealthProfile);
+router.delete("/:id", deleteHealthProfile);
 
 module.exports = router;

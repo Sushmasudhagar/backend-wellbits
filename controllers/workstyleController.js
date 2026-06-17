@@ -4,7 +4,6 @@ require("../models/WorkstyleProfile");
 // CREATE
 exports.createWorkstyleProfile = async(req,res)=>{
  try{
-  req.body.userId = req.user.userId;
 
   const profile =
   await WorkstyleProfile.create(req.body);
@@ -31,7 +30,7 @@ exports.getWorkstyleProfiles = async(req,res)=>{
  try{
 
   const profiles =
-  await WorkstyleProfile.find({ userId: req.user.userId });
+  await WorkstyleProfile.find();
 
   res.status(200).json({
    success:true,
@@ -55,7 +54,7 @@ exports.getWorkstyleProfileById = async(req,res)=>{
  try{
 
   const profile =
-  await WorkstyleProfile.findOne({ _id: req.params.id, userId: req.user.userId });
+  await WorkstyleProfile.findById(req.params.id);
 
   if(!profile){
    return res.status(404).json({
@@ -85,8 +84,8 @@ exports.updateWorkstyleProfile = async(req,res)=>{
  try{
 
   const profile =
-  await WorkstyleProfile.findOneAndUpdate(
-   { _id: req.params.id, userId: req.user.userId },
+  await WorkstyleProfile.findByIdAndUpdate(
+   req.params.id,
    req.body,
    {
     new:true,
@@ -123,8 +122,8 @@ exports.deleteWorkstyleProfile = async(req,res)=>{
  try{
 
   const profile =
-  await WorkstyleProfile.findOneAndDelete(
-   { _id: req.params.id, userId: req.user.userId }
+  await WorkstyleProfile.findByIdAndDelete(
+   req.params.id
   );
 
   if(!profile){

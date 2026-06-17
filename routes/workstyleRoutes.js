@@ -2,7 +2,6 @@ const express=require("express");
 
 const router=express.Router();
 
-const authMiddleware = require("../middleware/authMiddleware");
 const {
  createWorkstyleProfile,
  getWorkstyleProfiles,
@@ -13,14 +12,14 @@ const {
 =
 require("../controllers/workstyleController");
 
-router.post("/create", authMiddleware, createWorkstyleProfile);
+router.post("/create", createWorkstyleProfile);
 
-router.get("/all", authMiddleware, getWorkstyleProfiles);
+router.get("/all", getWorkstyleProfiles);
 
-router.get("/:id", authMiddleware, getWorkstyleProfileById);
+router.get("/:id", getWorkstyleProfileById);
 
-router.put("/:id", authMiddleware, updateWorkstyleProfile);
+router.put("/:id", updateWorkstyleProfile);
 
-router.delete("/:id", authMiddleware, deleteWorkstyleProfile);
+router.delete("/:id", deleteWorkstyleProfile);
 
 module.exports=router;
