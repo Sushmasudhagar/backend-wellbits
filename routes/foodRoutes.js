@@ -1,0 +1,19 @@
+const express = require("express");
+
+const router = express.Router();
+
+const upload =
+require("../middleware/uploadMiddleware");
+
+const {
+    uploadFood
+}
+=
+require("../controllers/foodController");
+
+router.post(
+    "/upload",
+    upload.single("foodImage"),
+    uploadFood
+);
+module.exports = router;
