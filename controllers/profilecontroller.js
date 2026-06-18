@@ -1,19 +1,17 @@
 const UserRepository =
   require("../repositories/userRepository");
 
+
 const getProfile = async (req, res) => {
+  console.log(req.user);
 
   try {
-
-    const user =
-      await UserRepository.getUserById(
-        req.user.userId
-      );
+    const user = await UserRepository.getUserById(
+      req.user.userId
+    );
 
     res.json(user);
-
   } catch (error) {
-
     res.status(500).json({
       message: error.message
     });

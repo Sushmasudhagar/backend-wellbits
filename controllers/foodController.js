@@ -1,50 +1,58 @@
 const Food = require("../models/foodModel");
 
 const getNutrition =
-require("../services/nutritionService");
+    require("../services/nutritionService");
 
-const generateDietChart =
-require("../services/dietService");
+const {
+    generateDietPlan
+} = require("../services/dietService");
 
 const uploadFood = async (req, res) => {
 
     try {
 
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Image is required"
+            });
+        }
+
         const imagePath = req.file.path;
 
-        // For now manually set food name
+        // Temporary hardcoded food name
         const foodName = "Chicken Biryani";
 
         const nutrition =
-        await getNutrition(foodName);
+            await getNutrition(foodName);
 
         const dietChart =
-        await generateDietChart(nutrition);
+            await generateDietPlan(nutrition);
 
         const savedFood =
-        await Food.create({
+            await Food.create({
 
-            image: imagePath,
+                image: imagePath,
 
-            foodName: nutrition.foodName,
+                foodName: nutrition.foodName,
 
-            calories: nutrition.calories,
+                calories: nutrition.calories,
 
-            protein: nutrition.protein,
+                protein: nutrition.protein,
 
-            carbs: nutrition.carbs,
+                carbs: nutrition.carbs,
 
-            fat: nutrition.fat,
+                fat: nutrition.fat,
 
-            dietChart
-        });
+                dietChart
+            });
 
         res.status(200).json({
 
             success: true,
 
             message:
-            "Food analyzed successfully",
+                "Food analyzed successfully",
 
             data: savedFood
         });

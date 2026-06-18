@@ -3,19 +3,17 @@ const groq = require("./groqService");
 const getNutrition = async (foodName) => {
 
     const response =
-    await groq.chat.completions.create({
+        await groq.chat.completions.create({
 
-        model: "llama-3.3-70b-versatile",
+            model: "llama-3.3-70b-versatile",
 
-        messages: [
-            {
-                role: "user",
-                content: `
+            messages: [
+                {
+                    role: "user",
+                    content: `
 Analyze ${foodName}
 
 Return ONLY valid JSON.
-Do not use markdown.
-Do not use backticks.
 
 {
   "foodName":"",
@@ -25,19 +23,23 @@ Do not use backticks.
   "fat":0
 }
 `
-            }
-        ]
-    });
+                }
+            ]
+        });
 
     let content =
-    response.choices[0].message.content;
+        response.choices[0].message.content;
 
     content = content
         .replace(/```json/g, "")
         .replace(/```/g, "")
         .trim();
 
-    return JSON.parse(content);
+    try {
+        return JSON.parse(content);
+    } catch (error) {
+        throw new Error("Invalid JSON returned from AI");
+    }
 };
 
 module.exports = getNutrition;

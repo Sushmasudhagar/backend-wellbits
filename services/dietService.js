@@ -1,70 +1,42 @@
-const grok = require("../config/groq");
-const calculateBMI =
-require("../utils/bmiCalculator");
+const groq = require("./groqService");
 
-const generateDietPlan = async(userData) => {
+const generateDietPlan = async (userData) => {
 
-        if (!userData) {
+    if (!userData) {
         throw new Error("User data is required");
     }
-
-    if (!userData.weight || !userData.height) {
-        throw new Error(
-            "Weight and height are required"
-        );
-    }
-
-    const bmi = calculateBMI(
-        userData.weight,
-        userData.height
-    );
-
 
     const prompt = `
 You are a professional nutritionist.
 
-Create a personalized one-day diet plan.
+Create a diet recommendation based on:
 
-User Information:
-
-Age: ${userData.age}
-Gender: ${userData.gender}
-Weight: ${userData.weight} kg
-Height: ${userData.height} cm
-BMI: ${bmi}
-
-Health Conditions:
-${userData.healthConditions.join(", ")}
-
-Activity Level:
-${userData.activityLevel}
-
-Food Preference:
-${userData.foodPreference}
+Food Name: ${userData.foodName}
+Calories: ${userData.calories}
+Protein: ${userData.protein}
+Carbs: ${userData.carbs}
+Fat: ${userData.fat}
 
 Provide:
 
-1. Daily calories
-2. Protein target
-3. Breakfast
-4. Lunch
-5. Snacks
-6. Dinner
-7. Nutritional explanation
+1. Health analysis
+2. Benefits
+3. Risks (if any)
+4. Suggested meal timing
+5. Recommended daily intake advice
 
-Return JSON only.
+Return plain text.
 `;
 
     const completion =
-        await grok.chat.completions.create({
+        await groq.chat.completions.create({
 
-         model: "llama-3.3-70b-versatile",
+            model: "llama-3.3-70b-versatile",
 
             messages: [
                 {
                     role: "system",
-                    content:
-                    "You are an expert dietician."
+                    content: "You are an expert nutritionist."
                 },
                 {
                     role: "user",

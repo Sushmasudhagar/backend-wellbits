@@ -8,11 +8,9 @@ const authMiddleware =
 const profileController =
   require("../controllers/profileController");
 
-router.get(
-  "/",
-  authMiddleware,
-  profileController.getProfile
-);
+router.get("/",authMiddleware,profileController.getProfile);
+
+
 
 router.put(
   "/",
